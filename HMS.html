@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Monitoring System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2a6e8f;
+            --secondary: #3ab795;
+            --accent: #e74c3c;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --gray: #6c757d;
+            --normal: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            color: var(--dark);
+            line-height: 1.6;
+            background-color: #f5f7fa;
+            scroll-behavior: smooth;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            margin-right: 10px;
+            color: var(--secondary);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav li {
+            margin-left: 1.5rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            padding: 5px 0;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: var(--secondary);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--secondary);
+            transition: width 0.3s;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            font-size: 1.5rem;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, #1a4a63 100%);
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+
+        .hero-btn {
+            display: inline-block;
+            background-color: var(--secondary);
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .hero-btn:hover {
+            background-color: #2e9c7e;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Main Content */
+        section {
+            padding: 3rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            color: var(--primary);
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            width: 70px;
+            height: 4px;
+            background-color: var(--secondary);
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Cards */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1.2rem;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .card-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        /* System Design Section */
+        .system-design {
+            background-color: #e9f2f7;
+        }
+
+        .design-diagram {
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            background-color: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .component {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 5px solid var(--primary);
+        }
+
+        .component i {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-right: 1rem;
+        }
+
+        /* Web Interface Preview */
+        .interface-preview {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .interface-card {
+            width: 280px;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .interface-card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            background-color: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray);
+        }
+
+        .interface-card-content {
+            padding: 1.2rem;
+        }
+
+        .interface-card-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        /* Status Indicators */
+        .status-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .status-card {
+            width: 180px;
+            padding: 1.5rem;
+            border-radius: 10px;
+            color: white;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .status-normal {
+            background-color: var(--normal);
+        }
+
+        .status-warning {
+            background-color: var(--warning);
+            color: var(--dark);
+        }
+
+        .status-danger {
+            background-color: var(--danger);
+        }
+
+        /* Demonstration */
+        .demo-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .video-placeholder {
+            width: 100%;
+            max-width: 800px;
+            height: 300px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .video-placeholder i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Future Work */
+        .future-features {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .feature {
+            width: 200px;
+            padding: 1.5rem 1rem;
+            background-color: white;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s;
+        }
+
+        .feature:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        /* Team Section */
+        .team {
+            background-color: #e9f2f7;
+        }
+
+        .team-members {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .team-member {
+            text-align: center;
+            max-width: 250px;
+        }
+
+        .member-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin: 0 auto 1rem;
+            font-weight: 600;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 3rem 0 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1.5rem;
+            color: var(--secondary);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--secondary);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid #444;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            nav ul {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background-color: var(--primary);
+                flex-direction: column;
+                align-items: center;
+                padding: 1rem 0;
+                display: none;
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            }
+            
+            nav.active ul {
+                display: flex;
+            }
+            
+            nav li {
+                margin: 0.8rem 0;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-heartbeat"></i>
+                Health Monitor
+            </div>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav id="mainNav">
+                <ul>
+                    <li><a href="#problem">Problem</a></li>
+                    <li><a href="#solution">Solution</a></li>
+                    <li><a href="#design">Design</a></li>
+                    <li><a href="#interface">Interface</a></li>
+                    <li><a href="#future">Future Work</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container fade-in">
+            <h1>Health Monitoring System</h1>
+            <p>A wearable system that continuously measures vital signs including heart rate, SpO₂, and body temperature in real-time, providing early health warnings and making health monitoring accessible for everyone.</p>
+            <a href="#solution" class="hero-btn">View Our Solution</a>
+        </div>
+    </section>
+
+    <!-- The Problem Section -->
+    <section id="problem" class="container">
+        <h2 class="section-title">The Problem</h2>
+        <div class="cards">
+            <div class="card fade-in">
+                <div class="card-header">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Health Monitoring Challenges</h3>
+                </div>
+                <div class="card-body">
+                    <p>Many people, especially those with chronic conditions and elderly patients, find it difficult to routinely check their vital signs. Ignoring these checks might cause major health issues and delay diagnosis.</p>
+                </div>
+            </div>
+            <div class="card fade-in">
+                <div class="card-header">
+                    <h3><i class="fas fa-bullseye"></i> Our Goal</h3>
+                </div>
+                <div class="card-body">
+                    <p>To provide early health warnings through a simple system that continuously measures vital signs such as body temperature, heart rate, and SpO₂, making health monitoring accessible and reliable.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- System Requirements -->
+    <section class="container">
+        <h2 class="section-title">System Requirements</h2>
+        <div class="cards">
+            <div class="card fade-in">
+                <div class="card-header">
+                    <h3><i class="fas fa-microchip"></i> Hardware Requirements</h3>
+                </div>
+                <div class="card-body">
+                    <ul>
+                        <li><strong>ESP32 microcontroller</strong> (built-in Wi-Fi)</li>
+                        <li><strong>MAX30102 sensor</strong> (SpO₂ + Heart Rate)</li>
+                        <li><strong>SHT3x temperature sensor</strong></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card fade-in">
+                <div class="card-header">
+                    <h3><i class="fas fa-code"></i> Software Requirements</h3>
+                </div>
+                <div class="card-body">
+                    <ul>
+                        <li><strong>Arduino IDE</strong> (ESP32 firmware)</li>
+                        <li><strong>HTML/CSS/JavaScript</strong> (web interface)</li>
+                        <li><strong>JSON + SPIFFS</strong> for local storage</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- System Design -->
+    <section id="design" class="system-design">
+        <div class="container">
+            <h2 class="section-title">System Design</h2>
+            <div class="design-diagram fade-in">
+                <h3>System Architecture</h3>
+                <p>The SHT3x temperature sensor and the MAX30102 (heart rate & SpO₂) are connected to an ESP32 microcontroller. Data is read, processed, and sent to the local web dashboard by the ESP32.</p>
+                
+                <div class="component">
+                    <i class="fas fa-microchip"></i>
+                    <div>
+                        <h4>ESP32 Microcontroller</h4>
+                        <p>Central processing unit with built-in Wi-Fi capability</p>
+                    </div>
+                </div>
+                
+                <div class="component">
+                    <i class="fas fa-heartbeat"></i>
+                    <div>
+                        <h4>MAX30102 Sensor</h4>
+                        <p>Measures heart rate and blood oxygen saturation (SpO₂)</p>
+                    </div>
+                </div>
+                
+                <div class="component">
+                    <i class="fas fa-thermometer-half"></i>
+                    <div>
+                        <h4>SHT3x Temperature Sensor</h4>
+                        <p>Measures body temperature accurately</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Solution -->
+    <section id="solution" class="container">
+        <h2 class="section-title">The Solution</h2>
+        <div class="cards">
+            <div class="card fade-in">
+                <div class="card-header">
+                    <h3><i class="fas fa-watch"></i> Wearable Device</h3>
+                </div>
+                <div class="card-body">
+                    <p>Our solution is a wearable health-monitoring system that uses an ESP32 microcontroller and biomedical sensors to measure critical vital signs in real time.</p>
+                </div>
+            </div>
+            <div class="card fade-in">
+                <div class="card-header">
+                    <h3><i class="fas fa-tachometer-alt"></i> Real-time Monitoring</h3>
+                </div>
+                <div class="card-body">
+                    <p>The system displays readings on a local web dashboard with color-coded indicators, making it easier for users to understand their health state.</p>
+                </div>
+            </div>
+            <div class="card fade-in">
+                <div class="card-header">
+                    <h3><i class="fas fa-history"></i> Data History</h3>
+                </div>
+                <div class="card-body">
+                    <p>The system saves measurement history so that users can review previous results and track their health over time.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Web Interface -->
+    <section id="interface" class="container">
+        <h2 class="section-title">Web Interface</h2>
+        <p class="text-center" style="text-align: center; margin-bottom: 2rem;">Our system includes a comprehensive web dashboard with multiple pages for managing patients, taking measurements, and monitoring health data.</p>
+        
+        <div class="interface-preview">
+            <div class="interface-card fade-in">
+                <div style="background-color: #e3f2fd; display: flex; align-items: center; justify-content: center; height: 160px;">
+                    <i class="fas fa-user-plus" style="font-size: 3rem; color: var(--primary);"></i>
+                </div>
+                <div class="interface-card-content">
+                    <h4 class="interface-card-title">Register Patient Page</h4>
+                    <p>Used to add a new patient by inputting their basic information.</p>
+                </div>
+            </div>
+            
+            <div class="interface-card fade-in">
+                <div style="background-color: #e8f5e9; display: flex; align-items: center; justify-content: center; height: 160px;">
+                    <i class="fas fa-stethoscope" style="font-size: 3rem; color: var(--primary);"></i>
+                </div>
+                <div class="interface-card-content">
+                    <h4 class="interface-card-title">Measurement Page</h4>
+                    <p>Used to perform health measurements and save them to the system.</p>
+                </div>
+            </div>
+            
+            <div class="interface-card fade-in">
+                <div style="background-color: #fff3e0; display: flex; align-items: center; justify-content: center; height: 160px;">
+                    <i class="fas fa-clock" style="font-size: 3rem; color: var(--primary);"></i>
+                </div>
+                <div class="interface-card-content">
+                    <h4 class="interface-card-title">Wearable Device Manager</h4>
+                    <p>Automatic readings are taken every minute in wearable mode.</p>
+                </div>
+            </div>
+        </div>
+        
+        <h3 style="text-align: center; margin-top: 3rem; color: var(--primary);">Health Status Indicators</h3>
+        <div class="status-indicators">
+            <div class="status-card status-normal fade-in">
+                <i class="fas fa-check-circle" style="font-size: 2.5rem; margin-bottom: 1rem;"></i>
+                <h4>Normal</h4>
+                <p>Vital signs within healthy range</p>
+            </div>
+            <div class="status-card status-warning fade-in">
+                <i class="fas fa-exclamation-triangle" style="font-size: 2.5rem; margin-bottom: 1rem;"></i>
+                <h4>Warning</h4>
+                <p>Slightly abnormal readings</p>
+            </div>
+            <div class="status-card status-danger fade-in">
+                <i class="fas fa-exclamation-circle" style="font-size: 2.5rem; margin-bottom: 1rem;"></i>
+                <h4>Critical</h4>
+                <p>Immediate attention required</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demonstration -->
+    <section class="container">
+        <h2 class="section-title">Demonstration</h2>
+        <div class="demo-container fade-in">
+
+ <iframe
+   width="560"
+   height="315"
+       src="https://youtu.be/JEdx99fNS4w"
+   title="Project Demo"
+   frameborder="0"
+   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowfullscreen>
+ </iframe>
+        
+                <h3>System Demonstration Video</h3>
+        </div>
+    </section>
+
+    <!-- Future Work -->
+    <section id="future" class="container">
+        <h2 class="section-title">Future Work</h2>
+        <p class="text-center" style="text-align: center; margin-bottom: 2rem;">We have planned several enhancements to make the system even more powerful and accessible:</p>
+        
+        <div class="future-features">
+            <div class="feature fade-in">
+                <i class="fas fa-lock"></i>
+                <h4>Data Encryption</h4>
+                <p>Enhanced security for patient data</p>
+            </div>
+            <div class="feature fade-in">
+                <i class="fas fa-cloud"></i>
+                <h4>Cloud Backup</h4>
+                <p>Secure cloud storage for health data</p>
+            </div>
+            <div class="feature fade-in">
+                <i class="fas fa-mobile-alt"></i>
+                <h4>Mobile App</h4>
+                <p>Companion app for iOS and Android</p>
+            </div>
+            <div class="feature fade-in">
+                <i class="fas fa-language"></i>
+                <h4>Multi-Language</h4>
+                <p>Support for multiple languages</p>
+            </div>
+            <div class="feature fade-in">
+                <i class="fas fa-bell"></i>
+                <h4>Alerts</h4>
+                <p>Email/SMS alerts for critical readings</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="team">
+        <div class="container">
+            <h2 class="section-title">Project Team</h2>
+            <div class="team-members">
+                <div class="team-member fade-in">
+                    <div class="member-avatar">NA</div>
+                    <h3>Noor Ali Hasan Rahma</h3>
+                    <p>ID: 202003061</p>
+                </div>
+                <div class="team-member fade-in">
+                    <div class="member-avatar">BF</div>
+                    <h3>Batool Fadhel A.majeed</h3>
+                    <p>ID: 202005835</p>
+                </div>
+                <div class="team-member fade-in">
+                    <div class="member-avatar">HA</div>
+                    <h3>Hajer Aoun Habib</h3>
+                    <p>ID: 202008629</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Health Monitoring System</h3>
+                    <p>A wearable system for real-time health monitoring of vital signs including heart rate, SpO₂, and body temperature.</p>
+                  
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#problem">The Problem</a></li>
+                        <li><a href="#solution">Our Solution</a></li>
+                        <li><a href="#design">System Design</a></li>
+                        <li><a href="#interface">Web Interface</a></li>
+                        <li><a href="#future">Future Work</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact</h3>
+                    <p><i class="fas fa-envelope" style="margin-right: 10px;"></i> healthmonitorsystem.site</p>
+                    <p><i class="fas fa-map-marker-alt" style="margin-right: 10px;"></i> University of Bahrain</p>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 Health Monitoring System. Prepared by Noor Ali Hasan Rahma, Batool Fadhel A.majeed, Hajer Aoun Habib.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mainNav = document.getElementById('mainNav');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            mainNav.classList.toggle('active');
+        });
+        
+        // Close mobile menu when clicking a link
+        const navLinks = document.querySelectorAll('nav a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (mainNav.classList.contains('active')) {
+                    mainNav.classList.remove('active');
+                }
+            });
+        });
+        
+        // Fade-in animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                }
+            });
+        }, observerOptions);
+        
+        // Observe all elements with the fade-in class
+        document.addEventListener('DOMContentLoaded', () => {
+            const fadeElements = document.querySelectorAll('.card, .component, .interface-card, .status-card, .feature, .team-member');
+            fadeElements.forEach(el => {
+                observer.observe(el);
+            });
+        });
+        
+        // Simulate health data update
+        function updateHealthData() {
+            const heartRate = Math.floor(Math.random() * 40) + 60; // 60-100 bpm
+            const spo2 = Math.floor(Math.random() * 5) + 95; // 95-100%
+            const temp = (Math.random() * 1.5) + 36.5; // 36.5-38°C
+            
+            console.log(`Simulated Health Data - Heart Rate: ${heartRate} bpm, SpO₂: ${spo2}%, Temperature: ${temp.toFixed(1)}°C`);
+        }
+        
+        // Update health data every 5 seconds (simulation)
+        setInterval(updateHealthData, 5000);
+    </script>
+</body>
+</html>
